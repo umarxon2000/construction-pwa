@@ -1,65 +1,8 @@
-import Image from "next/image";
-
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
-}
+﻿"use client";
+import Link from "next/link";
+import { FormEvent, useEffect, useState } from "react";
+import { Plus, MapPin, WalletCards } from "lucide-react";
+import { useAppStore } from "@/lib/store";
+const money = (n: number) => new Intl.NumberFormat("uz-UZ").format(n) + " so'm";
+export default function ProjectsPage() { const { projects, expenses, loading, fetchAll, addProject } = useAppStore(); const [open, setOpen] = useState(false); useEffect(() => { fetchAll(); }, [fetchAll]); const submit = async (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); const f = new FormData(e.currentTarget); await addProject({ clientName: String(f.get("clientName")), location: String(f.get("location")), clientPhone: String(f.get("clientPhone")), totalEarned: Number(f.get("totalEarned")), advances: Number(f.get("advances")) }); e.currentTarget.reset(); setOpen(false); };
+return <><div className="mb-5 flex items-center justify-between"><div><p className="text-sm text-zinc-500">Boshqaruv paneli</p><h1 className="text-2xl font-bold">Faol obyektlar</h1></div><button onClick={() => setOpen(!open)} className="flex items-center gap-1 rounded-xl bg-zinc-950 px-3 py-2 text-sm font-semibold text-[#FFD700] dark:border dark:border-[#FFD700]/50"><Plus size={17}/> Yangi</button></div>{open && <form onSubmit={submit} className="mb-5 grid gap-3 rounded-2xl border border-zinc-200 bg-white p-4 dark:border-[#FFD700]/25 dark:bg-zinc-950"><input required name="clientName" placeholder="Mijoz ismi" className="field"/><input required name="location" placeholder="Obyekt manzili" className="field"/><input required name="clientPhone" placeholder="Telefon" className="field"/><div className="grid grid-cols-2 gap-3"><input required min="0" name="totalEarned" type="number" placeholder="Jami kelishuv" className="field"/><input min="0" defaultValue="0" name="advances" type="number" placeholder="Avans" className="field"/></div><button className="rounded-xl bg-amber-400 py-3 font-bold text-black dark:bg-[#FFD700]">Saqlash</button></form>}<div className="grid gap-3">{loading ? <p>Yuklanmoqda…</p> : projects.filter(p => p.status === "active").length === 0 ? <p className="rounded-2xl border border-dashed p-8 text-center text-zinc-500">Hali obyekt yo‘q. Birinchi loyihani yarating.</p> : projects.filter(p => p.status === "active").map(p => { const spent = expenses.filter(e => e.projectId === p.id).reduce((s,e) => s+e.amount,0); return <Link href={`/projects/${p.id}`} key={p.id} className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#C0C0C0]/25 dark:bg-zinc-950"><div className="flex justify-between"><h2 className="font-bold">{p.clientName}</h2><span className="text-sm font-semibold text-amber-600 dark:text-[#FFD700]">{money(p.totalEarned-spent)}</span></div><p className="mt-2 flex items-center gap-1 text-sm text-zinc-500"><MapPin size={14}/>{p.location}</p><p className="mt-3 flex items-center gap-1 text-xs text-zinc-500"><WalletCards size={14}/> Xarajat: {money(spent)}</p></Link>; })}</div></>; }

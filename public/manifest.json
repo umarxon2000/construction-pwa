@@ -1,0 +1,11 @@
+﻿{
+  "name": "Usta Pro — Construction Manager",
+  "short_name": "Usta Pro",
+  "description": "Offline-first construction projects, expenses and worker attendance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [{ "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }]
+}
