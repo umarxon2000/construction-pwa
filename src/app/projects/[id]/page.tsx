@@ -4,6 +4,7 @@ import { FormEvent, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Printer } from "lucide-react";
 import { expenseCategories, useAppStore } from "@/lib/store";
+import { CurrencyInput } from "@/components/currency-input";
 
 // Pullarni O'zbekiston so'mi formatida ko'rsatish uchun yordamchi funksiya
 const money = (n: number) => new Intl.NumberFormat("uz-UZ").format(n) + " so'm";
@@ -151,10 +152,9 @@ export default function ProjectDetails() {
             className="grid gap-2 rounded-2xl border p-4 dark:border-[#FFD700]/25"
           >
             <b>Mijozdan pul qabul qilish</b>
-            <input
+            <CurrencyInput
               required
               name="amount"
-              type="number"
               min="0"
               placeholder="Olingan summa"
               className="field"
@@ -179,10 +179,9 @@ export default function ProjectDetails() {
                 <option key={c}>{c}</option>
               ))}
             </select>
-            <input
+            <CurrencyInput
               required
               name="amount"
-              type="number"
               min="0"
               placeholder="Xarajat summasi"
               className="field"

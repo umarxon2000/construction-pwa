@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { CalendarDays, Check, Pencil, WalletCards } from "lucide-react";
 import { useAppStore } from "@/lib/store";
+import { CurrencyInput } from "@/components/currency-input";
 
 // Pullarni O'zbekiston so'mi formatida ko'rsatish
 const money = (value: number) => new Intl.NumberFormat("uz-UZ").format(value) + " so'm";
@@ -102,10 +103,9 @@ export default function WorkersPage() {
           placeholder="Ishchi ismi, masalan: Jasur"
           className="field"
         />
-        <input
+        <CurrencyInput
           required
           min="0"
-          type="number"
           name="dailyWage"
           placeholder="Kunlik nech pul ishlashi"
           className="field"
@@ -163,10 +163,9 @@ export default function WorkersPage() {
             ))}
         </select>
         <div className="grid grid-cols-2 gap-2">
-          <input
+          <CurrencyInput
             required
             name="amount"
-            type="number"
             min="0"
             placeholder="Berilgan summa"
             className="field"
