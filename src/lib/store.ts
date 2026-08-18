@@ -37,6 +37,8 @@ interface AppState {
   updateExpense: (id: number, data: Partial<ExpenseInput> & { editHistory?: { updatedAt: string, reason: string }[] }) => Promise<void>;
   
   updateWorker: (id: number, data: Partial<WorkerInput>) => Promise<void>;
+  // Yangi funksiya: ishchini royxatdan o'chirish (statusni 'inactive' ga o'zgartiradi)
+  deleteWorker: (id: number) => Promise<void>;
   updatePayment: (id: number, amount: number, note: string, date: string) => Promise<void>;
   deletePayment: (id: number) => Promise<void>;
   updateCustomerPayment: (id: number, amount: number, note: string, date: string) => Promise<void>;
@@ -78,6 +80,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   updateProject: async (id, data) => { await db.projects.update(id, data); await get().fetchAll(); },
   updateExpense: async (id, data) => { await db.expenses.update(id, data); await get().fetchAll(); },
   updateWorker: async (id, data) => { await db.workers.update(id, data); await get().fetchAll(); },
+  // Ishchini royxatdan o'chirish — statusni 'inactive' ga o'zgartiradi
+  deleteWorker: async (id) => { await db.workers.update(id, { status: "inactive" }); await get().fetchAll(); },
   updatePayment: async (id, amount, note, date) => { await db.payments.update(id, { amount, note, date }); await get().fetchAll(); },
   deletePayment: async (id) => { await db.payments.delete(id); await get().fetchAll(); },
   updateCustomerPayment: async (id, amount, note, date) => { await db.customerPayments.update(id, { amount, note, date }); await get().fetchAll(); },
